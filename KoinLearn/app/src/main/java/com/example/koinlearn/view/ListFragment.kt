@@ -6,23 +6,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.koinlearn.databinding.FragmentListBinding
 import com.example.koinlearn.model.CryptoModel
-import com.example.koinlearn.service.CryptoAPI
-import kotlinx.coroutines.*
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.example.koinlearn.viewmodel.CryptoViewModel
 
 
 class ListFragment : Fragment(), RecyclerViewAdapter.Listener {
    private var _binding: FragmentListBinding? = null
-
-   // This property is only valid between onCreateView and
-// onDestroyView.
    private val binding get() = _binding!!
+   private var cryptoAdapter = RecyclerViewAdapter(arrayListOf(), this)
 
-
+   val viewModel by lazy {
+      ViewModelProvider(this, defaultViewModelProviderFactory)[CryptoViewModel::class.java]
+   }
 
 
    override fun onCreateView(
@@ -39,10 +37,9 @@ class ListFragment : Fragment(), RecyclerViewAdapter.Listener {
 
       val layoutManager = LinearLayoutManager(requireContext())
       binding.recyclerView.layoutManager = layoutManager
-
+      viewModel.getDataFromApi()
 
    }
-
 
 
    override fun onItemClick(cryptoModel: CryptoModel) {

@@ -19,7 +19,6 @@ class CryptoViewModel : ViewModel() {
    val cryptoLoading = MutableLiveData<Boolean>()
 
 
-
    fun getDataFromApi() {
       val retrofit =
          Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create())
@@ -30,8 +29,10 @@ class CryptoViewModel : ViewModel() {
          val response = retrofit.getCryptoList()
          withContext(Dispatchers.Main) {
             if (response.isSuccessful) {
+               cryptoError.value = false
+               cryptoLoading.value = false
                response.body()?.let {
-
+                  cryptoList.value=it
                }
             }
 
