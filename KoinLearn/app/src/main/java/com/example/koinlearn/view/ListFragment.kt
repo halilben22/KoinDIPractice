@@ -21,9 +21,8 @@ class ListFragment : Fragment(), RecyclerViewAdapter.Listener {
    // This property is only valid between onCreateView and
 // onDestroyView.
    private val binding get() = _binding!!
-   private val BASE_URL = "https://raw.githubusercontent.com/"
-   private var cryptoModels: ArrayList<CryptoModel>? = null
-   private var job: Job? = null
+
+
 
 
    override fun onCreateView(
@@ -40,32 +39,11 @@ class ListFragment : Fragment(), RecyclerViewAdapter.Listener {
 
       val layoutManager = LinearLayoutManager(requireContext())
       binding.recyclerView.layoutManager = layoutManager
-      loadData()
+
 
    }
 
-   private fun loadData() {
-      val retrofit =
-         Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create())
-            .build().create(CryptoAPI::class.java)
 
-
-      job = CoroutineScope(Dispatchers.IO).launch {
-         val response = retrofit.getCryptoList()
-         withContext(Dispatchers.Main) {
-            if (response.isSuccessful) {
-               response.body()?.let {
-                  cryptoModels = ArrayList(it)
-                  binding.recyclerView.adapter =
-                     RecyclerViewAdapter(cryptoModels!!, this@ListFragment)
-               }
-            }
-
-
-         }
-      }
-
-   }
 
    override fun onItemClick(cryptoModel: CryptoModel) {
       Toast.makeText(requireContext(), "Clicked on:${cryptoModel.currency}", Toast.LENGTH_SHORT)
