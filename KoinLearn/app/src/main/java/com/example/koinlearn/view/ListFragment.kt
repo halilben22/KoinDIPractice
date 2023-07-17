@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.koinlearn.databinding.FragmentListBinding
@@ -38,6 +39,19 @@ class ListFragment : Fragment(), RecyclerViewAdapter.Listener {
       val layoutManager = LinearLayoutManager(requireContext())
       binding.recyclerView.layoutManager = layoutManager
       viewModel.getDataFromApi()
+
+   }
+
+   private fun observeLiveData() {
+
+      viewModel.cryptoList.observe(viewLifecycleOwner, Observer { cryptos ->
+         cryptos.let {
+            cryptoAdapter = RecyclerViewAdapter(ArrayList(cryptos), this)
+            binding.recyclerView.adapter = cryptoAdapter
+         }
+      })
+
+
 
    }
 
